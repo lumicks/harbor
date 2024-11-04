@@ -1,0 +1,8 @@
+<h1>Pinball</h1><br>
+<b>Author</b>: Aafke van den Berg<br>
+<b>Key words</b>: Game<br>
+<b>Research subjects</b>: Other applications<br>
+<br>
+<div><span style="font-family: Arial;">In case you need a break, or are waiting for something to finish:&nbsp;</span></div><div><strong><span style="font-family: Arial;">Play pinball on the C-Trap</span></strong><span style="font-family: Arial;"> using two optical traps with beads caught.</span><br><br><span style="font-family: Arial;">Trap 1, the 'ball', bounces of the walls of its ROM. The user moves Trap 2, the 'racket', vertically along the right wall of the ROM</span><br><span style="font-family: Arial;">and has to prevent Trap 1 from 'escaping' through the right wall.</span><br><br><span style="font-family: Arial;">The game ends when the player misses the ball.</span></div><div><span style="font-family: Arial;"><br></span></div><div><span style="font-family: Arial;">The current high score is 24 hits. Share your high score in the comment section on the right!</span></div><div><span style="font-family: Arial;"><br></span></div><div><span style="font-family: Arial;">Developed by: Michael&nbsp;</span>Bugiel</div><div><br></div><div><br></div><div class="se-component se-image-container __se__float-none"><figure style="margin: 0px;"><img style="" data-origin="," data-file-size="1919061" data-file-name="pinball_short_loop.gif" data-percentage="auto,auto" data-align="none" data-size="," data-rotatey="" data-rotatex="" data-proportion="true" data-rotate="" alt="" src="img0.gif" data-index="0"></figure></div><div><span style="font-family: Arial;"><br></span></div><br><br>
+<br>
+
