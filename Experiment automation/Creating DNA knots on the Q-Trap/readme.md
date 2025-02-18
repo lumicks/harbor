@@ -1,5 +1,5 @@
 <h1>Creating DNA knots on the Q-Trap</h1><br>
-<b>Author</b>: Aafke van den Berg<br>
+<b>Author</b>: Roeland van Wijk, Aafke van den Berg<br>
 <b>Key words</b>: DNA, Knotting, Q-Trap<br>
 <b>Research subjects</b>: DNA-binding proteins<br>
 <br>
