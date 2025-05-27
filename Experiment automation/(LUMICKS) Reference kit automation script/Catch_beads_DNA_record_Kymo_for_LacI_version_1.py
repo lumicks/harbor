@@ -105,7 +105,7 @@ def catch_beads(match_threshold, pressure=0.25):
     bl.mirror2.clear()
 
     print("Trapping beads.")
-    start_time = bl.time.time()
+    start_time = time.time()
     n = 0
     while match_score1.latest_value < match_threshold or match_score2.latest_value < match_threshold:
         """Drop beads that do not fulfill the template"""
@@ -117,10 +117,10 @@ def catch_beads(match_threshold, pressure=0.25):
             stop_flow()
             raise Exception("Need more than 750 seconds to catch beads, stop script")
         """If it's taking too long, maybe something is stuck in the trap. Clear both traps."""
-        if bl.time.time() - start_time > 15:
+        if time.time() - start_time > 15:
             bl.mirror1.clear()
             bl.mirror2.clear()
-            start_time = bl.time.time()
+            start_time = time.time()
             n += 1
         bl.pause(1.0)
 
@@ -155,9 +155,9 @@ def goto_force(target, match_threshold, speed=1, tolerance=1, tether_lost_thresh
 
 
 def get_force(dt=0.5):
-    t0 = bl.timeline.current_time
+    t0 = bl.timeline.now
     bl.pause(dt)
-    t1 = bl.timeline.current_time
+    t1 = bl.timeline.now
     f = np.mean(force[t0:t1].data)
 
     return f
