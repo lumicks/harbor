@@ -25,7 +25,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------
-This script Iteratively catch beads, fishes for DNA and makes a kymograph at 10 pN.
+This script Iteratively catches beads, fishes for DNA and makes a kymograph at 10 pN.
 The script is optimized for DNA tethers with a length of 37.8 kbp (12.85 micron).
 Before running the script
     1) The traps have to be aligned horizontally.
@@ -47,7 +47,7 @@ Workflow of the script
 """
 from datetime import datetime
 
-import bluelake as bl#import trap1, trap2, microstage, fluidics, pause, power, timeline, reset_force, confocal, time
+import bluelake as bl
 import time
 import os
 import numpy as np
