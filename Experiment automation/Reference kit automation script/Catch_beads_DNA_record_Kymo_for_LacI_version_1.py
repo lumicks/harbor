@@ -47,7 +47,7 @@ Workflow of the script
 """
 from datetime import datetime
 
-from bluelake import trap1, trap2, microstage, fluidics, pause, power, timeline, reset_force, confocal, time
+import bluelake as bl#import trap1, trap2, microstage, fluidics, pause, power, timeline, reset_force, confocal, time
 import time
 import os
 import numpy as np
@@ -61,10 +61,10 @@ name_buffer_channel = "buffer"
 time_to_wait_for_flow = 5.0
 dna_length = 0.34*37.8  # Length of DNA in micrometers
 
-distance = timeline["Distance"]["Distance 1"]
-force = timeline["Force LF"]["Trap 2"]
-match_score1 = timeline["Tracking Match Score"]["Bead 1"]
-match_score2 = timeline["Tracking Match Score"]["Bead 2"]
+distance = bl.timeline["Distance"]["Distance 1"]
+force = bl.timeline["Force LF"]["Trap 2"]
+match_score1 = bl.timeline["Tracking Match Score"]["Bead 1"]
+match_score2 = bl.timeline["Tracking Match Score"]["Bead 2"]
 
 
 def throw_if_beads_lost(match_threshold):
@@ -75,20 +75,20 @@ def throw_if_beads_lost(match_threshold):
 
 def set_pressure(target):
     """Increase pressure until we are above a certain target level"""
-    while fluidics.pressure < target:
-        fluidics.increase_pressure()
-        pause(1.0)
+    while bl.fluidics.pressure < target:
+        bl.fluidics.increase_pressure()
+        bl.pause(1.0)
 
 
 def start_flow(pressure):
     print("Starting Flow.")
     set_pressure(pressure)
-    fluidics.open(1, 2, 3, 6)
+    bl.fluidics.open(1, 2, 3, 6)
 
 
 def stop_flow():
     print("Stopping flow.")
-    fluidics.close(1, 2, 3, 6)
+    bl.fluidics.close(1, 2, 3, 6)
 
 
 def catch_beads(match_threshold, pressure=0.25):
@@ -96,33 +96,33 @@ def catch_beads(match_threshold, pressure=0.25):
     start_flow(pressure)
 
     print(f"Waiting {time_to_wait_for_flow} sec for flow to begin.")
-    pause(time_to_wait_for_flow)
+    bl.pause(time_to_wait_for_flow)
 
     print("Moving to bead channel.")
-    microstage.move_to(name_bead_channel)
-    pause(1.0)
-    trap1.clear()
-    trap2.clear()
+    bl.microstage.move_to(name_bead_channel)
+    bl.pause(1.0)
+    bl.mirror1.clear()
+    bl.mirror2.clear()
 
     print("Trapping beads.")
-    start_time = time.time()
+    start_time = bl.time.time()
     n = 0
     while match_score1.latest_value < match_threshold or match_score2.latest_value < match_threshold:
         """Drop beads that do not fulfill the template"""
         if 0 < match_score1.latest_value < match_threshold:
-            trap1.clear()
+            bl.mirror1.clear()
         if 0 < match_score2.latest_value < match_threshold:
-            trap2.clear()
+            bl.mirror2.clear()
         if n > 50:
             stop_flow()
             raise Exception("Need more than 750 seconds to catch beads, stop script")
         """If it's taking too long, maybe something is stuck in the trap. Clear both traps."""
-        if time.time() - start_time > 15:
-            trap1.clear()
-            trap2.clear()
-            start_time = time.time()
+        if bl.time.time() - start_time > 15:
+            bl.mirror1.clear()
+            bl.mirror2.clear()
+            start_time = bl.time.time()
             n += 1
-        pause(1.0)
+        bl.pause(1.0)
 
     print("Got beads!")
 
@@ -135,7 +135,7 @@ def goto_distance(target, match_threshold, speed=1, tolerance=0.2):
     throw_if_beads_lost(match_threshold)
 
     while abs(dx) > tolerance:  # um
-        trap1.move_by(dx=0.1 if dx > 0 else -0.1, speed=speed)
+        bl.mirror1.move_by(dx=0.1 if dx > 0 else -0.1, speed=speed)
         dx = target - distance.latest_value
         throw_if_beads_lost(match_threshold)
 
@@ -148,16 +148,16 @@ def goto_force(target, match_threshold, speed=1, tolerance=1, tether_lost_thresh
     throw_if_beads_lost(match_threshold)
 
     while abs(df) > tolerance:  # um
-        trap1.move_by(dx=0.05 if df > 0 else -0.05, speed=speed)
+        bl.mirror1.move_by(dx=0.05 if df > 0 else -0.05, speed=speed)
         df = target - get_force(dt=0.2)
         throw_if_beads_lost(match_threshold)
     check_tether_breakage(tether_lost_threshold)
 
 
 def get_force(dt=0.5):
-    t0 = timeline.current_time
-    pause(dt)
-    t1 = timeline.current_time
+    t0 = bl.timeline.current_time
+    bl.pause(dt)
+    t1 = bl.timeline.current_time
     f = np.mean(force[t0:t1].data)
 
     return f
@@ -166,10 +166,10 @@ def get_force(dt=0.5):
 def catch_dna(min_distance, max_distance, match_threshold, force_threshold, fishing_speed, fishing_attempts, dt):
     """Moves to the DNA channel and starts oscillating the trap until a prescribed force threshold is reached."""
     print("Moving to DNA channel")
-    microstage.move_to(name_dna_channel)
-    pause(2.0)
+    bl.microstage.move_to(name_dna_channel)
+    bl.pause(2.0)
     print("reset force")
-    reset_force()
+    bl.reset_force()
     f_current = get_force(dt=dt)
 
     attempts = 0
@@ -180,16 +180,16 @@ def catch_dna(min_distance, max_distance, match_threshold, force_threshold, fish
 
         if attempts % fishing_attempts == 0:  # If the number of attempts is an integer times max_retries, do this:
             print("Moving to DNA channel")
-            microstage.move_to(name_dna_channel)
+            bl.microstage.move_to(name_dna_channel)
             print(f"Moving beads a distance {dna_length} um apart")
             goto_distance(dna_length, match_threshold, speed=fishing_speed)
-            pause(3.0)
+            bl.pause(3.0)
             print("Moving to dna channel")
-            microstage.move_to(name_dna_channel)
-            pause(1.0)
+            bl.microstage.move_to(name_dna_channel)
+            bl.pause(1.0)
         print(f"Fishing for DNA: attempt {attempts}/{max_retries}")
         goto_distance(min_distance, match_threshold, speed=fishing_speed)
-        pause(0.5)
+        bl.pause(0.5)
         goto_distance(max_distance, match_threshold, speed=fishing_speed)
         f_current = get_force(dt=dt)
 
@@ -200,20 +200,20 @@ def make_kymograph(force_kymo, match_threshold, name, path):
     goto_force(force_kymo, match_threshold)
     try:
         goto_force(force_kymo, match_threshold)
-        timeline.mark_begin(name)
-        confocal.start_scan()
+        bl.timeline.mark_begin(name)
+        bl.confocal.start_scan()
         print("start kymograph")
-        pause(10.0)
+        bl.pause(10.0)
         # for df in [10]:
         print(f"go to a force of {force_kymo} pN")
         goto_force(force_kymo, match_threshold, speed=1)
-        pause(30)       ## needs to be 300 s in final version
+        bl.pause(30)       ## needs to be 300 s in final version
     finally:
         print("Stop kymograph")
-        confocal.abort_scan()
-        timeline.mark_end(export=True if path else False, filepath=f"{path}/{name}.h5")
+        bl.confocal.abort_scan()
+        bl.timeline.mark_end(export=True if path else False, filepath=f"{path}/{name}.h5")
         # exit()
-    pause(1)
+    bl.pause(1)
 
 
 def validate_dir(path):
@@ -232,7 +232,7 @@ def check_tether_breakage(test_force):
 
 def check_multiple_tethers(max_distance, multiple_tether_force, force_threshold, match_threshold, max_retries,speed):
     goto_distance(0.5 * dna_length, match_threshold, speed=speed)
-    reset_force()
+    bl.reset_force()
     goto_distance(0.95 * dna_length, match_threshold, speed=speed)
     if get_force() > multiple_tether_force:
         print("Caught multiple DNA tethers, let's try to break tethers until there is only one left")
@@ -273,25 +273,25 @@ def fd_workflow(experiment_name, path, match_threshold, dna_fishing_speed, min_d
                       fishing_attempts=4, dt=0.5)
             print("Stop flow")
             stop_flow()
-            pause(3.0)
+            bl.pause(3.0)
             check_multiple_tethers(max_distance=max_distance_fishing, multiple_tether_force=10, force_threshold=25,
                                    match_threshold=60, max_retries=7, speed=dna_fishing_speed)
             print("Go to distance of 0.75 x tether length")
             goto_distance(0.75 * dna_length, match_threshold, speed=dna_fishing_speed)
-            pause(1.0)
+            bl.pause(1.0)
             print("reset force")
-            reset_force()
+            bl.reset_force()
             print("Go to distance of 1 x tether length")
             goto_distance(dna_length, match_threshold, speed=dna_fishing_speed)
             check_tether_breakage(tether_lost_threshold)
             print(f"go to a force of {force_kymo} pN")
             goto_force(force_kymo, match_threshold)
             print("Go to channel junction")
-            microstage.move_to(name_junction, speed=60)
-            pause(2.0)
+            bl.microstage.move_to(name_junction, speed=60)
+            bl.pause(2.0)
             print("Go to protein channel")
-            microstage.move_to(name_protein_channel, speed=60)
-            pause(2.0)
+            bl.microstage.move_to(name_protein_channel, speed=60)
+            bl.pause(2.0)
             print(f"Recording kymograph (kymo: {kymo_count}).")
             current_time = datetime.now().strftime("%H%M%S")
             name = f"{current_time}-{experiment_name}_tether={kymo_count}"
