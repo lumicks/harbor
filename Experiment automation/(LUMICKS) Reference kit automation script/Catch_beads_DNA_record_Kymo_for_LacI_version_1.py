@@ -43,10 +43,9 @@ Workflow of the script
     6) Set the force to 10 pN
     7) Start a kymograph.
     8) Stop the kymograph.
-    9) Restart step 1 to 8
+    9) Restart step 1 to 8 n times, where n is the number of kymographs you want to make.
 """
 from datetime import datetime
-
 import bluelake as bl
 import time
 import os
