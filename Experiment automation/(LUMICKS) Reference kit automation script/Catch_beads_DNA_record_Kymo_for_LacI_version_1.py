@@ -157,9 +157,7 @@ def get_force(dt=0.5):
     t0 = bl.timeline.now
     bl.pause(dt)
     t1 = bl.timeline.now
-    f = np.mean(force[t0:t1].data)
-
-    return f
+    return np.mean(force[t0:t1].data)
 
 
 def catch_dna(min_distance, max_distance, match_threshold, force_threshold, fishing_speed, fishing_attempts, dt):
