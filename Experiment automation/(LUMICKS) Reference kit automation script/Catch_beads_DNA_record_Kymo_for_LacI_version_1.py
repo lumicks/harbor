@@ -114,7 +114,7 @@ def catch_beads(match_threshold, pressure=0.25):
             bl.mirror2.clear()
         if n > 50:
             stop_flow()
-            raise Exception("Need more than 750 seconds to catch beads, stop script")
+            raise RuntimeException("Needed more than 750 seconds to catch beads, stopping script")
         """If it's taking too long, maybe something is stuck in the trap. Clear both traps."""
         if time.time() - start_time > 15:
             bl.mirror1.clear()
