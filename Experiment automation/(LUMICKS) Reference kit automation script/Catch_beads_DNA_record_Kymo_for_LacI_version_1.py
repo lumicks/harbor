@@ -1,7 +1,7 @@
 """
 BSD 2-Clause License
 
-Copyright (c) 2021, LUMICKS B.V.
+Copyright (c) 2025, LUMICKS B.V.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
