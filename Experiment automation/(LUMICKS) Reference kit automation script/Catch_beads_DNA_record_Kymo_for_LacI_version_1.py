@@ -229,7 +229,7 @@ def check_tether_breakage(test_force):
         raise RuntimeError("Lost tether")
 
 
-def check_multiple_tethers(max_distance, multiple_tether_force, force_threshold, match_threshold, max_retries,speed):
+def check_multiple_tethers(max_distance, multiple_tether_force, force_threshold, match_threshold, max_retries, speed):
     goto_distance(0.5 * dna_length, match_threshold, speed=speed)
     bl.reset_force()
     goto_distance(0.95 * dna_length, match_threshold, speed=speed)
