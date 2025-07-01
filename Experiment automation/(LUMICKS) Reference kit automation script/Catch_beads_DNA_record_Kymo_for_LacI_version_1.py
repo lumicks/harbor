@@ -241,7 +241,7 @@ def check_multiple_tethers(max_distance, multiple_tether_force, force_threshold,
         while not one_tether_remains:
             if n == max_retries:
                 raise RuntimeError(f"Required more than {max_retries} attempts to break tethers")
-            """Go to a large distance, trying to brake tethers:"""
+            """Go to a large distance, trying to break tethers:"""
             goto_distance(dna_length + n * step_size, match_threshold, speed=speed)
             bl.pause(0.5)
             """Go to smaller distance, to check if there are still multiple tethers"""
