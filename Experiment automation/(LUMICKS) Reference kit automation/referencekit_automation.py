@@ -138,14 +138,24 @@ def goto_distance(target, match_threshold, speed=1, tolerance=0.2):
 
 def goto_force(target, match_threshold, speed=1, tolerance=1, tether_lost_threshold=5):
     """Move trap 1 until it reaches the `target` force on trap 2.
-    Note: This throws an error if the beads are lost
 
-    Parameters:
-    target: The target force to reach [pN]
-    match_threshold: The threshold for the match score to check whether the beads are still caught
-    speed: The speed at which to move the trap [um/s]
-    tolerance: The tolerance for the force measurement [pN]
-    tether_lost_threshold: The force threshold below which the tether is assumed lost [pN]"""
+    Parameters
+    ----------
+    target : float
+        The target force to reach [pN]
+    match_threshold: float
+        The threshold for the match score to check whether the beads are still caught
+    speed : float
+        The speed at which to move the trap [um/s]
+    tolerance : float
+        The tolerance for the force measurement [pN]
+    tether_lost_threshold : float
+        The force threshold below which the tether is assumed lost [pN]
+
+    Raises
+    ------
+    RuntimeError
+        If the beads are lost (since we will not have a reliable distance then either)"""
 
     df = target - force.latest_value
     throw_if_beads_lost(match_threshold)
