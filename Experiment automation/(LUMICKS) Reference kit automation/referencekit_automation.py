@@ -144,7 +144,7 @@ def goto_force(target, match_threshold, speed=1, tolerance=1, tether_lost_thresh
     target : float
         The target force to reach [pN]
     match_threshold: float
-        The threshold for the match score to check whether the beads are still caught
+        The threshold for the match score to check whether the beads are still caught [%]
     speed : float
         The speed at which to move the trap [um/s]
     tolerance : float
@@ -160,7 +160,7 @@ def goto_force(target, match_threshold, speed=1, tolerance=1, tether_lost_thresh
     df = target - force.latest_value
     throw_if_beads_lost(match_threshold)
 
-    while abs(df) > tolerance:  # um
+    while abs(df) > tolerance:  # pN
         bl.mirror1.move_by(dx=0.05 if df > 0 else -0.05, speed=speed)
         df = target - get_force(dt=0.2)
         throw_if_beads_lost(match_threshold)
@@ -184,7 +184,7 @@ def catch_dna(min_distance, max_distance, match_threshold, force_threshold, fish
     max_distance : float
         The maximum distance to oscillate the trap to (in microns)
     match_threshold : float
-        The threshold for the match score to check whether the beads are still caught
+        The threshold for the match score to check whether the beads are still caught [%]
     force_threshold : float
         The force threshold to check whether we have caught DNA (in pN)
     fishing_speed : float
@@ -253,13 +253,20 @@ def check_tether_breakage(test_force):
 def check_multiple_tethers(max_distance, multiple_tether_force, force_threshold, match_threshold, max_retries, speed, dna_length):
     """Check whether there are multiple tethers by going to a large distance and checking the force.
 
-    Parameters:
-    max_distance: The maximum distance to go to check for multiple tethers [um]
-    multiple_tether_force: The force threshold above which we assume there are multiple tethers [pN]
-    force_threshold: The force threshold above which we assume there is still a tether [pN]
-    match_threshold: The threshold for the match score to check whether the beads are still caught
-    max_retries: The maximum number of attempts to break tethers
-    speed: The speed at which to move the trap [um/s]
+    Parameters
+    ---------
+    max_distance : float 
+        The maximum distance to go to check for multiple tethers [um]
+    multiple_tether_force : float
+        The force threshold above which we assume there are multiple tethers [pN]
+    force_threshold : float 
+        The force threshold above which we assume there is still a tether [pN]
+    match_threshold : float 
+        The threshold for the match score to check whether the beads are still caught [%]
+    max_retries : integer
+        The maximum number of attempts to break tethers
+    speed : float 
+        The speed at which to move the trap [um/s]
     """
     goto_distance(0.5 * dna_length, match_threshold, speed=speed)
     bl.reset_force()
@@ -292,7 +299,8 @@ def check_multiple_tethers(max_distance, multiple_tether_force, force_threshold,
 def fd_workflow(experiment_name, path, match_threshold, dna_fishing_speed, min_distance_fishing, max_distance_fishing,
                 force_threshold, tether_lost_threshold, max_kymos, force_kymo, dna_length):
 
-    """Main workflow of the script. Catches beads, fishes for DNA and makes a kymograph at 10 pN.
+    """
+    Main workflow of the script. Catches beads, fishes for DNA and makes a kymograph at 10 pN.
     """
     path = validate_dir(path)
 
