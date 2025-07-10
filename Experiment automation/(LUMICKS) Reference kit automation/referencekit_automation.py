@@ -339,7 +339,6 @@ def fd_workflow(experiment_name, path, match_threshold, dna_fishing_speed, min_d
             name = f"{current_time}-{experiment_name}_tether={kymo_count}"
             check_tether_breakage(tether_lost_threshold)
             make_kymograph(force_kymo, match_threshold, name, path)
-            print("Script finished!")
 
         except RuntimeError as e:
             if kymo_count == max_kymos:
@@ -350,6 +349,8 @@ def fd_workflow(experiment_name, path, match_threshold, dna_fishing_speed, min_d
         finally:
             print("Stop the flow and vent")
             bl.fluidics.stop_flow()
+
+    print("Script finished!")
 
 
 fd_workflow(experiment_name="kymo",  # Name of the experiment (goes into the filename)
