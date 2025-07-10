@@ -44,6 +44,8 @@ Workflow of the script
     7) Start a kymograph
     8) Stop the kymograph and export the data
     9) Restart step 1 to 8 n times, where n is the number of kymographs you want to make.
+
+This script has been written for Bluelake > 2.0
 """
 import os
 import time
@@ -180,19 +182,19 @@ def catch_dna(min_distance, max_distance, match_threshold, force_threshold, fish
     Parameters
     ---------
     min_distance : float
-        The minimum distance to oscillate the trap to (in microns)
+        The minimum distance to oscillate the trap to when fishing for DNA (in microns)
     max_distance : float
         The maximum distance to oscillate the trap to (in microns)
     match_threshold : float
         The threshold for the match score to check whether the beads are still caught [%]
     force_threshold : float
-        The force threshold to check whether we have caught DNA (in pN)
+        The force threshold to check whether we have caught DNA [pN]
     fishing_speed : float
-        The speed at which to fish for DNA (in um/s)
+        The speed at which to fish for DNA [um/s]
     fishing_attempts : float
         The number of attempts to fish for DNA
     dt : float
-        The time interval over which the force is averaged (in seconds)
+        The time interval over which the force is averaged [s]
     """
     print("Moving to DNA channel")
     bl.microstage.move_to(name_dna_channel)
@@ -300,7 +302,32 @@ def fd_workflow(experiment_name, path, match_threshold, dna_fishing_speed, min_d
                 force_threshold, tether_lost_threshold, max_kymos, force_kymo, dna_length):
 
     """
-    Main workflow of the script. Catches beads, fishes for DNA and makes a kymograph at 10 pN.
+    Main workflow of the script. Catches beads, fishes for DNA and makes a kymograph at force_kymo pN.
+
+    Parameters
+    ----------
+    experiment_name : string
+        Name of the experiment (goes into the filename)
+    path : string
+        Where to store the data
+    match_threshold : float
+        The threshold for the match score to check whether the beads are still caught [%]
+    dna_fishing_speed : float
+        The speed at which the Trap should move when fishing for DNA [um/s]
+    min_distance_fishing : float
+        The minimum distance to oscillate the trap to when fishing for DNA (in microns)
+    max_distance_fishing : float
+        The maximum distance to oscillate the trap to (in microns)
+    force_threshold : float
+        The force threshold to check whether we have caught DNA [pN]
+    tether_lost_threshold : float
+        The force threshold to check whether the tether has been lost [pN]
+    max_kymos : integer
+        The maximum number to record
+    force_kymo : float
+        The force at which to record a kymograph [pN]
+    dna_length : float
+        The length of the DNA tether [micron]
     """
     path = validate_dir(path)
 
