@@ -177,14 +177,22 @@ def get_force(dt=0.5):
 def catch_dna(min_distance, max_distance, match_threshold, force_threshold, fishing_speed, fishing_attempts, dt, dna_length):
     """Moves to the DNA channel and starts oscillating the trap until a prescribed force threshold is reached.
 
-    Parameters:
-    min_distance: The minimum distance to oscillate the trap to
-    max_distance: The maximum distance to oscillate the trap to
-    match_threshold: The threshold for the match score to check whether the beads are still caught
-    force_threshold: The force threshold to check whether we have caught DNA
-    fishing_speed: The speed at which to fish for DNA
-    fishing_attempts: The number of attempts to fish for DNA
-    dt: The time interval over which the force is averaged [s]
+    Parameters
+    ---------
+    min_distance : float
+        The minimum distance to oscillate the trap to (in microns)
+    max_distance : float
+        The maximum distance to oscillate the trap to (in microns)
+    match_threshold : float
+        The threshold for the match score to check whether the beads are still caught
+    force_threshold : float
+        The force threshold to check whether we have caught DNA (in pN)
+    fishing_speed : float
+        The speed at which to fish for DNA (in um/s)
+    fishing_attempts : float
+        The number of attempts to fish for DNA
+    dt : float
+        The time interval over which the force is averaged (in seconds)
     """
     print("Moving to DNA channel")
     bl.microstage.move_to(name_dna_channel)
