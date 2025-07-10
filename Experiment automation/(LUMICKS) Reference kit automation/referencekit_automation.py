@@ -123,7 +123,10 @@ def catch_beads(match_threshold, pressure=pressure_flow):
 def goto_distance(target, match_threshold, speed=1, tolerance=0.2):
     """Move trap 1 until it reaches the `target` distance from trap 2.
 
-    Note: This throws an error if the beads are lost (since we will not have a reliable distance then either)"""
+    Raises
+    ------
+    RuntimeError
+        If the beads are lost (since we will not have a reliable distance then either)"""
     dx = target - distance.latest_value
     throw_if_beads_lost(match_threshold)
 
