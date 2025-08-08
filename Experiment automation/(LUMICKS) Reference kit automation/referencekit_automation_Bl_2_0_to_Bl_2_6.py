@@ -25,6 +25,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------
+This script has been written for 2.0 <= Bluelake version < 2.7 
+
 This script Iteratively catches beads, fishes for DNA and makes a kymograph at 10 pN.
 The script is optimized for DNA tethers with a length of 37.8 kbp (12.85 micron).
 Before running the script
@@ -45,13 +47,10 @@ Workflow of the script
     8) Stop the kymograph and export the data
     9) Restart step 1 to 8 n times, where n is the number of kymographs you want to make.
 
-This script has been written for Bluelake > 2.7
 """
 import os
 import time
 from datetime import datetime
-from pathlib import Path
-
 import bluelake as bl
 import numpy as np
 
@@ -221,7 +220,7 @@ def make_kymograph(force_kymo, match_threshold, name, path):
     goto_force(force_kymo, match_threshold)
     try:
         goto_force(force_kymo, match_threshold)
-        t0 = bl.timeline.now
+        bl.timeline.mark_begin(name)
         bl.confocal.start_scan()
         print("start kymograph")
         bl.pause(10.0)
@@ -232,9 +231,7 @@ def make_kymograph(force_kymo, match_threshold, name, path):
         print("Stop kymograph")
         bl.confocal.abort_scan()
         bl.pause(2)
-        t1 = bl.timeline.now
-        marker = bl.Marker(name, start = t0, stop = t1)
-        marker.export(Path(path))
+        bl.timeline.mark_end(export=True if path else False, filepath=f"{path}/{name}.h5")
     bl.pause(1)
 
 
