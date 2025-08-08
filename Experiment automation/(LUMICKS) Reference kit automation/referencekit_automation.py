@@ -45,7 +45,7 @@ Workflow of the script
     8) Stop the kymograph and export the data
     9) Restart step 1 to 8 n times, where n is the number of kymographs you want to make.
 
-This script has been written for Bluelake > 2.0
+This script has been written for Bluelake > 2.7
 """
 import os
 import time
