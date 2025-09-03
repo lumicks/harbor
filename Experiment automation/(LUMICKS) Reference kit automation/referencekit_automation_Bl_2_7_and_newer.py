@@ -111,7 +111,7 @@ def catch_beads(match_threshold, pressure=pressure_flow):
             bl.shutters.clear(2)
         if n > 50:
             close_valves()
-            raise RuntimeException("Needed more than 750 seconds to catch beads, stopping script")
+            raise RuntimeError("Needed more than 750 seconds to catch beads, stopping script")
         # If it's taking too long, maybe something is stuck in the trap. Clear both traps.
 
         if time.time() - start_time > 15:
